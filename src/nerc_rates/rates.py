@@ -1,7 +1,7 @@
 import requests
 import yaml
 
-from .models import Rates
+from .models.rates_model import Rates
 
 DEFAULT_RATES_FILE = "rates.yaml"
 DEFAULT_RATES_URL = (
