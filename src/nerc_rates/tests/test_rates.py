@@ -4,7 +4,8 @@ import pytest
 import pydantic
 import requests_mock
 
-from nerc_rates import load_from_url, rates, models
+from nerc_rates import load_from_url, rates
+from nerc_rates.models import rates_model
 
 
 def test_load_from_url():
@@ -26,7 +27,7 @@ def test_invalid_date_order():
     with pytest.raises(
         pydantic.ValidationError, match="date_until must be after date_from"
     ):
-        models.RateValue.model_validate(rate)
+        rates_model.RateValue.model_validate(rate)
 
 
 def test_invalid_rate_type():
@@ -40,7 +41,7 @@ def test_invalid_rate_type():
     with pytest.raises(
         pydantic.ValidationError, match="Input should be 'str', 'Decimal' or 'bool'"
     ):
-        models.RateItem.model_validate(rate)
+        rates_model.RateItem.model_validate(rate)
 
 
 def test_missing_type_field():
@@ -51,7 +52,7 @@ def test_missing_type_field():
         ],
     }
     with pytest.raises(pydantic.ValidationError, match="type\n  Field required"):
-        models.RateItem.model_validate(rate)
+        rates_model.RateItem.model_validate(rate)
 
 
 @pytest.mark.parametrize(
@@ -97,7 +98,7 @@ def test_missing_type_field():
 )
 def test_invalid_date_overlap(rate):
     with pytest.raises(pydantic.ValidationError, match="date ranges overlap"):
-        models.RateItem.model_validate(rate)
+        rates_model.RateItem.model_validate(rate)
 
 
 @pytest.mark.parametrize(
@@ -124,11 +125,11 @@ def test_invalid_rate_values(rate_item_data):
         pydantic.ValidationError,
         match="Bool field must be a string of either True or False|is not valid Decimal",
     ):
-        models.RateItem.model_validate(rate_item_data)
+        rates_model.RateItem.model_validate(rate_item_data)
 
 
 def test_rates_get_value_at():
-    r = rates.Rates(
+    r = rates_model.Rates(
         [
             {
                 "name": "Test Rate",
@@ -151,7 +152,7 @@ def test_fail_with_duplicate_names():
     with pytest.raises(
         pydantic.ValidationError, match=r"found duplicate name .* in list"
     ):
-        rates.Rates(
+        rates_model.Rates(
             [
                 {
                     "name": "Test Rate",
@@ -175,7 +176,7 @@ def test_fail_with_duplicate_names():
 
 @pytest.fixture
 def sample_rates():
-    return rates.Rates(
+    return rates_model.Rates(
         [
             # Decimal-typed RateItem
             {
