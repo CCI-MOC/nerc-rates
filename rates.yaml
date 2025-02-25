@@ -87,14 +87,34 @@
 #################################################
 # SU Definitions
 #################################################
-- name: vCPUs in CPU SU
+- name: CPU SU Definition
   history:
-    - value: "1"
+    - value: "vCPU 1,RAM 4096,vGPU 0"
       from: 2023-06
 
-- name: RAM in CPU SU
+- name: GPUA100 SU Definition
   history:
-    - value: "4096"
+    - value: "vCPU 24,RAM 75776,vGPU 1"
+      from: 2023-06
+
+- name: GPUA100SXM4 SU Definition
+  history:
+    - value: "vCPU 31,RAM 245760,vGPU 1"
+      from: 2023-06
+
+- name: GPUV100 SU Definition
+  history:
+    - value: "vCPU 48,RAM 196608,vGPU 1"
+      from: 2023-06
+
+- name: GPUK80 SU Definition
+  history:
+    - value: "vCPU 6,RAM 29184,vGPU 1"
+      from: 2023-06
+
+- name: GPUH100 SU Definition
+  history:
+    - value: "vCPU 63,RAM 385024,vGPU 1"
       from: 2023-06
 
 #################################################
