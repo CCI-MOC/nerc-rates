@@ -1,8 +1,8 @@
 - name: MGHPCC Shutdown 2024
   url: https://nerc.mghpcc.org/event/mghpcc-annual-power-shutdown-2024/
   timeframes:
-    - from: "2024-05-22T08:00:00-0400+00:00Z"
-      until: "2024-05-28T23:00:00-0400+00:00Z"
+    - from: "2024-05-22T08:00:00Z"
+      until: "2024-05-28T23:00:00Z"
       affected_services:
         - NERC OpenStack
         - NERC OpenShift

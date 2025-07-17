@@ -1,0 +1,41 @@
+# Primary outage for basic tests (May 2024)
+- name: MGHPCC Shutdown 2024
+  url: https://nerc.mghpcc.org/event/mghpcc-annual-power-shutdown-2024/
+  timeframes:
+    - from: "2024-05-22T08:00:00Z"
+      until: "2024-05-28T23:00:00Z"
+      affected_services:
+        - NERC OpenStack
+        - NERC OpenShift
+
+# Second outage for multiple outages tests (June 2024)
+- name: Network Maintenance
+  url: https://nerc.mghpcc.org/event/network-maintenance/
+  timeframes:
+    - from: "2024-06-15T10:00:00Z"
+      until: "2024-06-15T18:00:00Z"
+      affected_services:
+        - NERC OpenStack
+        - NERC OpenShift
+
+# Multiple timeframes outage (July 2024)
+- name: Extended Maintenance
+  url: https://nerc.mghpcc.org/event/extended-maintenance/
+  timeframes:
+    - from: "2024-07-10T08:00:00Z"
+      until: "2024-07-10T18:00:00Z"
+      affected_services:
+        - NERC OpenStack
+    - from: "2024-07-12T08:00:00Z"
+      until: "2024-07-12T18:00:00Z"
+      affected_services:
+        - NERC OpenStack
+
+# Storage-only outage for service filtering tests (August 2024)
+- name: Storage Maintenance
+  url: https://nerc.mghpcc.org/event/storage-maintenance/
+  timeframes:
+    - from: "2024-08-05T10:00:00Z"
+      until: "2024-08-05T16:00:00Z"
+      affected_services:
+        - NERC Storage

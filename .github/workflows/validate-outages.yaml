@@ -1,18 +1,18 @@
-name: Validate rates file
+name: Validate outages file
 on:
   push:
     paths:
-      - rates.yaml
+      - outages.yaml
   pull_request:
     paths:
-      - rates.yaml
+      - outages.yaml
 
 jobs:
-  validate-rates-file:
+  validate-outages-file:
     strategy:
       matrix:
         python-version: [3.12, 3.13]
-    name: Validate rates file
+    name: Validate outages file
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
@@ -27,6 +27,6 @@ jobs:
         run: |
           pip install -e .
 
-      - name: Validate rates file
+      - name: Validate outages file
         run: |
-          validate-file -t rates -g rates.yaml
+          validate-file -t outages -g outages.yaml
