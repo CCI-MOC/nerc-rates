@@ -17,7 +17,26 @@ and `until` (optional).
       from: 2024-07
 ```
 
-To make use of the rates, install the package and import the module
+To make use of the rates and outages data, install the package and import the modules:
+
+## Usage
+
+### Loading Rates
+```python
+from nerc_rates import rates
+rate_data = rates.load_from_url()
+rate_data.get_value_at("CPU SU Rate", "2024-06")
+```
+
+### Loading Outages
+```python
+from nerc_rates import outages
+outage_data = outages.load_from_url()
+outage_data.get_outages_during("2024-05-01", "2024-06-01", "NERC OpenStack")
+```
+
+### Backwards Compatibility
+The old API is still supported:
 ```python
 from nerc_rates import load_from_url
 rates = load_from_url()
