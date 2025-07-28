@@ -1,5 +1,4 @@
-# For python < 3.11, we need typing_extensions.Self instead of typing.Self
-from typing_extensions import Self
+from typing import Self
 from typing import Annotated
 from enum import StrEnum
 from decimal import Decimal
