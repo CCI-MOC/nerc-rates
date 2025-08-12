@@ -1,17 +1,29 @@
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from typing import Self
 from typing import Annotated
 from enum import StrEnum
 from decimal import Decimal
 
 import pydantic
+import warnings
 
 from .rates import Base
 
 
 def parse_time(v: str | datetime) -> datetime:
     if isinstance(v, str):
-        return datetime.fromisoformat(v).astimezone(timezone.utc)
+        dt = datetime.fromisoformat(v)
+        # Warn if timezone is present and not UTC
+        if dt.tzinfo is not None and dt.utcoffset() != timedelta(0):
+            warnings.warn(
+                "Non-UTC timezone detected in outages data; converting to UTC",
+                UserWarning,
+                stacklevel=2,
+            )
+        # Treat naive datetimes as UTC
+        if dt.tzinfo is None:
+            return dt.replace(tzinfo=timezone.utc)
+        return dt.astimezone(timezone.utc)
     return v
 
 

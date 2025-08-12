@@ -5,7 +5,6 @@ This directory contains tests for the NERC (New England Research Cloud) rates an
 ## What Do These Tests Do?
 
 These tests verify that our system can:
-- **Load rates data** correctly from files and URLs
 - **Track outages** and their impact on different services
 - **Calculate billing periods** accurately, accounting for service interruptions
 - **Handle edge cases** that might occur in real-world scenarios
@@ -43,8 +42,7 @@ These tests ensure our billing rates system works correctly.
 - Ensuring no duplicate rate names exist
 - Validating that date ranges don't overlap
 
-### 🚨 **Outages Tests** (`test_outages.py`)
-These tests verify our outage tracking and impact assessment.
+### s**Outages Tests** (`test_outages.py`)
 
 ## Detailed Test Scenarios
 
