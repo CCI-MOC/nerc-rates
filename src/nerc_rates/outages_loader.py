@@ -1,7 +1,7 @@
 import requests
 import yaml
 
-from .models import Outages
+from .models.outages import Outages
 
 DEFAULT_OUTAGES_FILE = "outages.yaml"
 DEFAULT_OUTAGES_URL = (

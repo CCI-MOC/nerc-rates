@@ -6,7 +6,7 @@ from decimal import Decimal
 
 import pydantic
 
-from .models import Base
+from .models.rates import Base
 
 
 def parse_time(v: str | datetime) -> datetime:

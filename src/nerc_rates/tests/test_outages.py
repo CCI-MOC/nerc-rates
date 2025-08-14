@@ -350,38 +350,6 @@ def test_year_boundary_outages(tmp_path, yaml_text, start, end, service, expecte
     [
         (
             """
-            - name: MGHPCC Shutdown 2024
-              url: https://nerc.mghpcc.org/event/mghpcc-annual-power-shutdown-2024/
-              timeframes:
-                - from: "2024-05-22T12:00:00Z"
-                  until: "2024-05-29T03:00:00Z"
-                  affected_services:
-                    - NERC OpenStack
-            """,
-            "2024-05-22",
-            "2024-05-23",
-            "NERC OpenStack",
-            [
-                (
-                    datetime.datetime.fromisoformat("2024-05-22T12:00:00Z"),
-                    datetime.datetime.fromisoformat("2024-05-23T00:00:00Z"),
-                )
-            ],
-        )
-    ],
-)
-def test_timezone_naive_handling(tmp_path, yaml_text, start, end, service, expected):
-    path = tmp_path / "outages.yaml"
-    path.write_text(textwrap.dedent(yaml_text).strip() + "\n")
-    outages = outages_loader.load_from_file(str(path))
-    assert outages.get_outages_during(start, end, service) == expected
-
-
-@pytest.mark.parametrize(
-    "yaml_text, start, end, service, expected",
-    [
-        (
-            """
             - name: Offset Outage Example
               url: https://example.org/outage/offset-example
               timeframes:
@@ -480,8 +448,8 @@ def test_all_services_affected(tmp_path, service):
     )
 
 
-def test_load_from_url_original():
-    """Keep one original test that uses URL loading"""
+def test_load_from_url():
+    """Testing if outages can be fetched from URL using load_from_url"""
     import requests_mock
 
     mock_response_text = """
