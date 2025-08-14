@@ -31,8 +31,10 @@ def test_invalid_date_order():
 
 
 def test_invalid_rate_type():
-    rate = {"name": "Test Rate", "type": "invalid_type",
-            "history": [
+    rate = {
+        "name": "Test Rate",
+        "type": "invalid_type",
+        "history": [
             {"value": "1", "from": "2020-01"},
         ],
     }
@@ -53,7 +55,6 @@ def test_missing_type_field():
         pydantic.ValidationError, match="type\n  Field required"
     ):
         models.rates.RateItem.model_validate(rate)
-
 
 @pytest.mark.parametrize(
     "rate",
@@ -120,9 +121,14 @@ def test_invalid_date_overlap(rate):
         },
     ],
 )
+
 def test_invalid_rate_type(rate_item_data):
-    with pytest.raises(pydantic.ValidationError, match="Bool field must be a string of either True or False|is not valid Decimal"):
+    with pytest.raises(
+        pydantic.ValidationError, 
+        match="Bool field must be a string of either True or False|is not valid Decimal"
+    ):
         models.rates.RateItem.model_validate(rate_item_data)
+
 
 
 def test_rates_get_value_at():
@@ -207,8 +213,6 @@ def sample_rates():
         ("Boolean Rate", "2020-01", Decimal, None, TypeError),
     ],
 )
-
-
 def test_get_value_at_cases(sample_rates, name, query_date, datatype, expected, raises):
     if raises:
         with pytest.raises(raises):
