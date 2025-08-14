@@ -51,10 +51,9 @@ def test_missing_type_field():
             {"value": "1.23", "from": "2023-01"},
         ],
     }
-    with pytest.raises(
-        pydantic.ValidationError, match="type\n  Field required"
-    ):
+    with pytest.raises(pydantic.ValidationError, match="type\n  Field required"):
         models.rates.RateItem.model_validate(rate)
+
 
 @pytest.mark.parametrize(
     "rate",
@@ -121,14 +120,12 @@ def test_invalid_date_overlap(rate):
         },
     ],
 )
-
-def test_invalid_rate_type(rate_item_data):
+def test_invalid_rate_type_values(rate_item_data):
     with pytest.raises(
-        pydantic.ValidationError, 
-        match="Bool field must be a string of either True or False|is not valid Decimal"
+        pydantic.ValidationError,
+        match="Bool field must be a string of either True or False|is not valid Decimal",
     ):
         models.rates.RateItem.model_validate(rate_item_data)
-
 
 
 def test_rates_get_value_at():

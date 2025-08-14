@@ -1,8 +1,5 @@
 from datetime import datetime, timezone, timedelta
-from typing import Self
 from typing import Annotated
-from enum import StrEnum
-from decimal import Decimal
 
 import pydantic
 import warnings
@@ -52,8 +49,9 @@ class Outages(pydantic.RootModel):
         outages = []
         for outage in self.root:
             for o in outage.timeframes:
-                if (affected_service in o.affected_services
-                        and (start < o.time_from < end or start < o.time_until < end)):
+                if affected_service in o.affected_services and (
+                    start < o.time_from < end or start < o.time_until < end
+                ):
                     outages.append((max(start, o.time_from), min(end, o.time_until)))
 
         return outages

@@ -228,7 +228,9 @@ def test_no_outages_in_range(tmp_path, yaml_text, start, end, service, expected)
         ),
     ],
 )
-def test_different_affected_services(tmp_path, yaml_text, start, end, service, expected):
+def test_different_affected_services(
+    tmp_path, yaml_text, start, end, service, expected
+):
     path = tmp_path / "outages.yaml"
     path.write_text(textwrap.dedent(yaml_text).strip() + "\n")
     outages = outages_loader.load_from_file(str(path))
@@ -295,7 +297,9 @@ def test_service_not_affected(tmp_path, yaml_text, start, end, service, expected
         )
     ],
 )
-def test_multiple_timeframes_same_outage(tmp_path, yaml_text, start, end, service, expected):
+def test_multiple_timeframes_same_outage(
+    tmp_path, yaml_text, start, end, service, expected
+):
     path = tmp_path / "outages.yaml"
     path.write_text(textwrap.dedent(yaml_text).strip() + "\n")
     outages = outages_loader.load_from_file(str(path))
@@ -402,12 +406,15 @@ def test_timezone_offset_handling(tmp_path, yaml_text, start, end, service, expe
         )
     ],
 )
-def test_timezone_offset_emits_warning(tmp_path, yaml_text, start, end, service, expected):
+def test_timezone_offset_emits_warning(
+    tmp_path, yaml_text, start, end, service, expected
+):
     path = tmp_path / "outages.yaml"
     path.write_text(textwrap.dedent(yaml_text).strip() + "\n")
     with pytest.warns(UserWarning, match="Non-UTC timezone detected"):
         outages = outages_loader.load_from_file(str(path))
     assert outages.get_outages_during(start, end, service) == expected
+
 
 @pytest.mark.parametrize(
     "service",
