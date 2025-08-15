@@ -32,6 +32,7 @@ from nerc_rates import outages_loader
     ],
 )
 def test_single_outage_in_range(tmp_path, yaml_text, start, end, service, expected):
+    """Ensures a single outage fully within the range is returned for the requested service."""
     path = tmp_path / "outages.yaml"
     path.write_text(textwrap.dedent(yaml_text).strip() + "\n")
     outages = outages_loader.load_from_file(str(path))
@@ -86,6 +87,7 @@ def test_single_outage_in_range(tmp_path, yaml_text, start, end, service, expect
     ],
 )
 def test_partial_overlap_outages(tmp_path, yaml_text, start, end, service, expected):
+    """Verifies partial overlaps are clipped to the requested start or end date boundaries."""
     path = tmp_path / "outages.yaml"
     path.write_text(textwrap.dedent(yaml_text).strip() + "\n")
     outages = outages_loader.load_from_file(str(path))
@@ -129,6 +131,7 @@ def test_partial_overlap_outages(tmp_path, yaml_text, start, end, service, expec
     ],
 )
 def test_multiple_outages_in_range(tmp_path, yaml_text, start, end, service, expected):
+    """Confirms multiple outages within the range are returned in chronological order for the service."""
     path = tmp_path / "outages.yaml"
     path.write_text(textwrap.dedent(yaml_text).strip() + "\n")
     outages = outages_loader.load_from_file(str(path))
@@ -156,6 +159,7 @@ def test_multiple_outages_in_range(tmp_path, yaml_text, start, end, service, exp
     ],
 )
 def test_no_outages_in_range(tmp_path, yaml_text, start, end, service, expected):
+    """Asserts no outages are returned when none occur within the requested date range."""
     path = tmp_path / "outages.yaml"
     path.write_text(textwrap.dedent(yaml_text).strip() + "\n")
     outages = outages_loader.load_from_file(str(path))
@@ -231,6 +235,7 @@ def test_no_outages_in_range(tmp_path, yaml_text, start, end, service, expected)
 def test_different_affected_services(
     tmp_path, yaml_text, start, end, service, expected
 ):
+    """Checks filtering by affected service across outages with differing services and timeframes."""
     path = tmp_path / "outages.yaml"
     path.write_text(textwrap.dedent(yaml_text).strip() + "\n")
     outages = outages_loader.load_from_file(str(path))
@@ -258,6 +263,7 @@ def test_different_affected_services(
     ],
 )
 def test_service_not_affected(tmp_path, yaml_text, start, end, service, expected):
+    """Ensures an unrelated service yields no matching outages within the range."""
     path = tmp_path / "outages.yaml"
     path.write_text(textwrap.dedent(yaml_text).strip() + "\n")
     outages = outages_loader.load_from_file(str(path))
@@ -300,6 +306,7 @@ def test_service_not_affected(tmp_path, yaml_text, start, end, service, expected
 def test_multiple_timeframes_same_outage(
     tmp_path, yaml_text, start, end, service, expected
 ):
+    """Validates all timeframes under a single outage entry are returned for the service."""
     path = tmp_path / "outages.yaml"
     path.write_text(textwrap.dedent(yaml_text).strip() + "\n")
     outages = outages_loader.load_from_file(str(path))
@@ -343,6 +350,7 @@ def test_multiple_timeframes_same_outage(
     ],
 )
 def test_year_boundary_outages(tmp_path, yaml_text, start, end, service, expected):
+    """Tests that outages spanning a year boundary are handled and returned correctly."""
     path = tmp_path / "outages.yaml"
     path.write_text(textwrap.dedent(yaml_text).strip() + "\n")
     outages = outages_loader.load_from_file(str(path))
@@ -375,6 +383,7 @@ def test_year_boundary_outages(tmp_path, yaml_text, start, end, service, expecte
     ],
 )
 def test_timezone_offset_handling(tmp_path, yaml_text, start, end, service, expected):
+    """Ensures non-UTC timezone offsets are normalized to UTC in returned outage intervals."""
     path = tmp_path / "outages.yaml"
     path.write_text(textwrap.dedent(yaml_text).strip() + "\n")
     outages = outages_loader.load_from_file(str(path))
@@ -409,6 +418,7 @@ def test_timezone_offset_handling(tmp_path, yaml_text, start, end, service, expe
 def test_timezone_offset_emits_warning(
     tmp_path, yaml_text, start, end, service, expected
 ):
+    """Emits a warning when non-UTC timezone offsets are detected while loading outages."""
     path = tmp_path / "outages.yaml"
     path.write_text(textwrap.dedent(yaml_text).strip() + "\n")
     with pytest.warns(UserWarning, match="Non-UTC timezone detected"):
@@ -427,6 +437,7 @@ def test_timezone_offset_emits_warning(
     ],
 )
 def test_all_services_affected(tmp_path, service):
+    """Checks that all listed services are reported as affected for the outage in the given window."""
     yaml_text = """
     - name: Power Infrastructure Upgrade 2025
       url: https://nerc.mghpcc.org/event/power-infrastructure-upgrade-2025/

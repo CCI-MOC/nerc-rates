@@ -31,14 +31,3 @@ python -m pytest src/nerc_rates/tests/test_rates.py -v
 ```bash
 python -m pytest src/nerc_rates/tests/test_outages.py::test_multiple_outages_in_range -v
 ```
-
-## Test Data
-
-### `test_outages.yaml`
-Contains synthetic but representative outage data including:
-- **Annual shutdowns** (multi-day)
-- **Quarterly maintenance** (multiple windows)
-- **Emergency patches** (short duration)
-- **Infrastructure upgrades** (affects all services)
-
-All timestamps use **Zulu time (UTC)** format for consistency.
