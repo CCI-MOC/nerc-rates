@@ -1,1 +1,4 @@
-from nerc_rates.rates import load_from_file, load_from_url  # noqa: F401
+from nerc_rates.rates_loader import (
+    load_from_file as load_from_file,
+    load_from_url as load_from_url,
+)
