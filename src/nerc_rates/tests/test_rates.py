@@ -4,8 +4,7 @@ import pytest
 import pydantic
 import requests_mock
 
-from nerc_rates import load_from_url, rates_loader
-from nerc_rates import models
+from nerc_rates import load_from_url, rates_loader, models
 
 
 def test_load_from_url():

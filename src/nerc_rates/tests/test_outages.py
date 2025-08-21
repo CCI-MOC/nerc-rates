@@ -1,5 +1,6 @@
 import datetime
 import textwrap
+import uuid
 
 import pytest
 import requests_mock
@@ -16,8 +17,14 @@ from pydantic import ValidationError
 def outage_factory():
     """Factory for creating outage data structures"""
 
-    def _factory(name, url, timeframes):
+    def _factory(
+        timeframes,
+        name="Test Outage",
+        url="https://example.org/test-outage",
+        outage_uuid=None,
+    ):
         return {
+            "uuid": outage_uuid or str(uuid.uuid4()),
             "name": name,
             "url": url,
             "timeframes": timeframes,
@@ -42,17 +49,15 @@ def timeframe_factory():
 
 # Fixtures for common outage data structures
 @pytest.fixture
-def example_mghpcc_shutdown_2024(outage_factory, timeframe_factory):
-    """Example MGHPCC Shutdown 2024 outage data for testing"""
+def example_single_outage(outage_factory, timeframe_factory):
+    """Example single outage data for testing"""
     return [
         outage_factory(
-            "MGHPCC Shutdown 2024",
-            "https://nerc.mghpcc.org/event/mghpcc-annual-power-shutdown-2024/",
             [
                 timeframe_factory(
                     "2024-05-22T12:00:00Z", "2024-05-29T03:00:00Z", ["NERC OpenStack"]
                 )
-            ],
+            ]
         )
     ]
 
@@ -62,8 +67,6 @@ def example_multiple_timeframes_outage(outage_factory, timeframe_factory):
     """Example outage with multiple timeframes for testing"""
     return [
         outage_factory(
-            "Network Maintenance Q2 2024",
-            "https://nerc.mghpcc.org/event/network-maintenance-q2-2024/",
             [
                 timeframe_factory(
                     "2024-06-10T02:00:00Z", "2024-06-10T06:00:00Z", ["NERC Service"]
@@ -71,7 +74,7 @@ def example_multiple_timeframes_outage(outage_factory, timeframe_factory):
                 timeframe_factory(
                     "2024-06-17T02:00:00Z", "2024-06-17T04:00:00Z", ["NERC Service"]
                 ),
-            ],
+            ]
         )
     ]
 
@@ -81,22 +84,18 @@ def example_multiple_events_outages(outage_factory, timeframe_factory):
     """Example multiple separate outages for testing"""
     return [
         outage_factory(
-            "Storage Upgrade Fall 2024",
-            "https://nerc.mghpcc.org/event/storage-upgrade-fall-2024/",
             [
                 timeframe_factory(
                     "2024-09-15T20:00:00Z", "2024-09-16T08:00:00Z", ["NERC Service"]
                 )
-            ],
+            ]
         ),
         outage_factory(
-            "Security Patching Winter 2024",
-            "https://nerc.mghpcc.org/event/security-patching-winter-2024/",
             [
                 timeframe_factory(
                     "2024-12-22T01:00:00Z", "2024-12-22T03:00:00Z", ["NERC Service"]
                 )
-            ],
+            ]
         ),
     ]
 
@@ -106,22 +105,18 @@ def example_multiple_outages_2024(outage_factory, timeframe_factory):
     """Example multiple outages for testing chronological ordering"""
     return [
         outage_factory(
-            "MGHPCC Shutdown 2024",
-            "https://nerc.mghpcc.org/event/mghpcc-annual-power-shutdown-2024/",
             [
                 timeframe_factory(
                     "2024-05-22T12:00:00Z", "2024-05-29T03:00:00Z", ["NERC OpenStack"]
                 )
-            ],
+            ]
         ),
         outage_factory(
-            "Network Maintenance Q2 2024",
-            "https://nerc.mghpcc.org/event/network-maintenance-q2-2024/",
             [
                 timeframe_factory(
                     "2024-06-10T02:00:00Z", "2024-06-10T06:00:00Z", ["NERC OpenStack"]
                 )
-            ],
+            ]
         ),
     ]
 
@@ -131,22 +126,18 @@ def example_year_boundary_outages(outage_factory, timeframe_factory):
     """Example outages spanning year boundary for testing"""
     return [
         outage_factory(
-            "Security Patching Winter 2024",
-            "https://nerc.mghpcc.org/event/security-patching-winter-2024/",
             [
                 timeframe_factory(
                     "2024-12-20T01:00:00Z", "2024-12-20T05:00:00Z", ["NERC OpenStack"]
                 )
-            ],
+            ]
         ),
         outage_factory(
-            "Power Infrastructure Upgrade 2025",
-            "https://nerc.mghpcc.org/event/power-infrastructure-upgrade-2025/",
             [
                 timeframe_factory(
                     "2025-01-05T06:00:00Z", "2025-01-12T18:00:00Z", ["NERC OpenStack"]
                 )
-            ],
+            ]
         ),
     ]
 
@@ -156,46 +147,20 @@ def example_timezone_offset_outage(outage_factory, timeframe_factory):
     """Example outage with timezone offset for testing timezone handling"""
     return [
         outage_factory(
-            "Offset Outage Example",
-            "https://example.org/outage/offset-example",
             [
                 timeframe_factory(
                     "2024-06-01T09:00:00-04:00",
                     "2024-06-01T11:30:00-04:00",
                     ["NERC OpenStack"],
                 )
-            ],
+            ]
         )
     ]
 
 
-@pytest.fixture
-def example_power_infrastructure_upgrade(outage_factory, timeframe_factory):
-    """Example power infrastructure upgrade affecting all services for testing"""
-    return [
-        outage_factory(
-            "Power Infrastructure Upgrade 2025",
-            "https://nerc.mghpcc.org/event/power-infrastructure-upgrade-2025/",
-            [
-                timeframe_factory(
-                    "2025-01-05T06:00:00Z",
-                    "2025-01-12T18:00:00Z",
-                    [
-                        "NERC OpenStack",
-                        "NERC OpenShift",
-                        "NERC Kubernetes",
-                        "NERC Storage",
-                        "NERC Monitoring",
-                    ],
-                )
-            ],
-        )
-    ]
-
-
-def test_single_outage_in_range(example_mghpcc_shutdown_2024):
+def test_single_outage_in_range(example_single_outage):
     """Ensures a single outage fully within the range is returned for the requested service."""
-    outages = Outages.model_validate(example_mghpcc_shutdown_2024)
+    outages = Outages.model_validate(example_single_outage)
     expected = [
         (
             datetime.datetime.fromisoformat("2024-05-22T12:00:00Z"),
@@ -235,9 +200,9 @@ def test_single_outage_in_range(example_mghpcc_shutdown_2024):
         ),
     ],
 )
-def test_partial_overlap_outages(example_mghpcc_shutdown_2024, start, end, expected):
+def test_partial_overlap_outages(example_single_outage, start, end, expected):
     """Verifies partial overlaps are clipped to the requested start or end date boundaries."""
-    outages = Outages.model_validate(example_mghpcc_shutdown_2024)
+    outages = Outages.model_validate(example_single_outage)
     assert outages.get_outages_during(start, end, "NERC OpenStack") == expected
 
 
@@ -260,17 +225,17 @@ def test_multiple_outages_in_range(example_multiple_outages_2024):
     )
 
 
-def test_no_outages_in_range(example_mghpcc_shutdown_2024):
+def test_no_outages_in_range(example_single_outage):
     """Asserts no outages are returned when none occur within the requested date range."""
-    outages = Outages.model_validate(example_mghpcc_shutdown_2024)
+    outages = Outages.model_validate(example_single_outage)
     assert (
         outages.get_outages_during("2024-08-01", "2024-08-31", "NERC OpenStack") == []
     )
 
 
-def test_service_not_affected(example_mghpcc_shutdown_2024):
+def test_service_not_affected(example_single_outage):
     """Ensures an unrelated service yields no matching outages within the range."""
-    outages = Outages.model_validate(example_mghpcc_shutdown_2024)
+    outages = Outages.model_validate(example_single_outage)
     assert (
         outages.get_outages_during("2024-05-01", "2024-06-01", "NERC NonExistent") == []
     )
@@ -364,25 +329,33 @@ def test_timezone_offset_emits_warning(example_timezone_offset_outage):
     )
 
 
-def test_multiple_services_affected(example_power_infrastructure_upgrade):
+def test_multiple_services_affected(example_single_outage):
     """Checks that outages affecting multiple services work correctly."""
-    outages = Outages.model_validate(example_power_infrastructure_upgrade)
+    example_single_outage[0]["timeframes"][0]["affected_services"] = [
+        "NERC OpenStack",
+        "NERC Kubernetes",
+        "NERC Storage",
+    ]
+    outages = Outages.model_validate(example_single_outage)
     expected = [
         (
-            datetime.datetime.fromisoformat("2025-01-05T06:00:00Z"),
-            datetime.datetime.fromisoformat("2025-01-12T18:00:00Z"),
+            datetime.datetime.fromisoformat(
+                "2024-05-22T12:00:00Z"
+            ),  # Start of outage from the single outage fixture
+            datetime.datetime.fromisoformat("2024-05-29T03:00:00Z"),
         )
     ]
     # Test a few different services to ensure they all work the same
     for service in ["NERC OpenStack", "NERC Kubernetes", "NERC Storage"]:
-        result = outages.get_outages_during("2025-01-01", "2025-01-31", service)
+        result = outages.get_outages_during("2024-05-01", "2024-05-31", service)
         assert result == expected
 
 
 def test_load_from_url():
     """Testing if outages can be fetched from URL using load_from_url"""
     mock_response_text = """
-    - name: MGHPCC Shutdown 2024
+    - uuid: "550e8400-e29b-41d4-a716-446655440000"
+      name: MGHPCC Shutdown 2024
       url: https://nerc.mghpcc.org/event/mghpcc-annual-power-shutdown-2024/
       timeframes:
         - from: "2024-05-22T08:00:00Z"
@@ -410,7 +383,8 @@ def test_load_from_url():
 def test_load_from_file(tmp_path):
     """Testing if outages can be loaded from file using load_from_file"""
     yaml_text = """
-    - name: Test Outage
+    - uuid: "123e4567-e89b-12d3-a456-426614174000"
+      name: Test Outage
       url: https://example.org/test-outage
       timeframes:
         - from: "2024-01-01T00:00:00Z"
@@ -434,12 +408,39 @@ def test_load_from_file(tmp_path):
     )
 
 
-def test_pydantic_validation_invalid_format(caplog):
+def test_no_duplicates_in_affected_services(outage_factory, timeframe_factory):
+    """Testing that Pydantic validation catches duplicate affected services"""
+    duplicate_outage = outage_factory(
+        [
+            timeframe_factory(
+                "2025-01-05T06:00:00Z",
+                "2025-01-12T18:00:00Z",
+                [
+                    "NERC OpenStack",
+                    "NERC OpenStack",
+                ],
+            )
+        ]
+    )
+    with pytest.raises(ValidationError) as exc_info:
+        Outages.model_validate([duplicate_outage])  # Need to wrap in list to validate
+
+    validation_error = exc_info.value
+    logging.error(
+        f"Pydantic caught {len(validation_error.errors())} validation errors:"
+    )
+    logging.error(f"Error: {validation_error.errors()}")
+
+    assert "affected_services must be unique" in str(validation_error)
+
+
+def test_pydantic_validation_invalid_format():
     """Testing that Pydantic validation catches invalid outage YAML format, run pytest with --log-cli-level=ERROR flag to see the errors"""
 
     # Invalid format - missing required fields, wrong types, etc.
     invalid_outage_data = [
         {
+            "uuid": "550e8400-e29b-41d4-a716-446655440001",
             # Missing 'name' field (required)
             "url": "https://example.org/test-outage",
             "timeframes": [
@@ -451,6 +452,7 @@ def test_pydantic_validation_invalid_format(caplog):
             ],
         },
         {
+            "uuid": "invalid-uuid-format",  # Invalid UUID format
             "name": 123,  # Wrong type - should be string
             "url": "not-a-valid-url",  # Invalid URL format
             "timeframes": "not-a-list",  # Wrong type - should be list

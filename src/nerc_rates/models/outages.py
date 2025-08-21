@@ -1,5 +1,6 @@
 from datetime import datetime, timezone, timedelta
-from typing import Annotated
+from typing import Annotated, Self
+from uuid import UUID
 
 import pydantic
 import warnings
@@ -32,8 +33,23 @@ class OutageTimeFrames(Base):
     time_until: Annotated[TimeField, pydantic.Field(alias="until", default=None)]
     affected_services: list[str]
 
+    @pydantic.model_validator(mode="after")
+    @classmethod
+    def validate_date_range(cls, data: Self):
+        if data.time_until and data.time_until < data.time_from:
+            raise ValueError("time_until must be after time_from")
+        return data
+
+    @pydantic.model_validator(mode="after")
+    @classmethod
+    def affected_services_no_duplicates(cls, data: Self):
+        if len(data.affected_services) != len(set(data.affected_services)):
+            raise ValueError("affected_services must be unique")
+        return data
+
 
 class OutageItem(Base):
+    uuid: UUID
     name: str
     url: pydantic.HttpUrl
     timeframes: list[OutageTimeFrames]
