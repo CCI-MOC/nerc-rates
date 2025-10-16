@@ -1,0 +1,11 @@
+# The outages data below is an example only. They are not real outages.
+
+# All outage timeframes are in UTC.
+
+# - url: https://nerc.mghpcc.org/event/mghpcc-annual-power-shutdown-2024/
+#   timeframes:
+#     - from: "2024-05-22T12:00:00Z"
+#       until: "2024-05-29T03:00:00Z"
+#       affected_services:
+#         - NERC OpenStack
+#         - NERC OpenShift
