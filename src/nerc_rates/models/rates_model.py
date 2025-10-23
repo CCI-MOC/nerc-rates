@@ -26,11 +26,10 @@ class RateValue(Base):
     date_until: Annotated[DateField, pydantic.Field(alias="until", default=None)]
 
     @pydantic.model_validator(mode="after")
-    @classmethod
-    def validate_date_range(cls, data: Self):
-        if data.date_until and data.date_until < data.date_from:
+    def validate_date_range(self) -> Self:
+        if self.date_until and self.date_until < self.date_from:
             raise ValueError("date_until must be after date_from")
-        return data
+        return self
 
 
 class RateType(StrEnum):
@@ -45,10 +44,9 @@ class RateItem(Base):
     history: list[RateValue]
 
     @pydantic.model_validator(mode="after")
-    @classmethod
-    def validate_no_overlap(cls, data: Self):
-        for x in data.history:
-            for y in data.history:
+    def validate_no_overlap(self) -> Self:
+        for x in self.history:
+            for y in self.history:
                 if x is not y:
                     if (
                         y.date_from <= x.date_from
@@ -59,17 +57,16 @@ class RateItem(Base):
                     ):
                         raise ValueError("date ranges overlap")
 
-        return data
+        return self
 
     @pydantic.model_validator(mode="after")
-    @classmethod
-    def validate_rate_type(cls, data: Self):
+    def validate_rate_type(self) -> Self:
         rate_type = {
             RateType.STR: str,
             RateType.BOOL: bool,
             RateType.DECIMAL: Decimal,
-        }.get(data.type)
-        for x in data.history:
+        }.get(self.type)
+        for x in self.history:
             if rate_type is Decimal:
                 try:
                     Decimal(x.value)
@@ -80,7 +77,7 @@ class RateItem(Base):
                     raise ValueError(
                         f"Bool field must be a string of either True or False, got {x.value}"
                     )
-        return data
+        return self
 
 
 def check_for_duplicates(items):
