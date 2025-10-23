@@ -16,7 +16,7 @@ dependencies = [
 ]
 
 [project.entry-points."console_scripts"]
-validate-rates-file = "nerc_rates.cmd.validate_rates_file:main"
+validate-files = "nerc_rates.cmd.validate_files:main"
 
 
 [build-system]
