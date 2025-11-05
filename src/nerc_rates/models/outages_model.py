@@ -36,18 +36,16 @@ class OutageTimeFrames(Base):
     affected_services: list[str]
 
     @pydantic.model_validator(mode="after")
-    @classmethod
-    def validate_date_range(cls, data: Self):
-        if data.time_until and data.time_until < data.time_from:
+    def validate_date_range(self) -> Self:
+        if self.time_until and self.time_until < self.time_from:
             raise ValueError("time_until must be after time_from")
-        return data
+        return self
 
     @pydantic.model_validator(mode="after")
-    @classmethod
-    def affected_services_no_duplicates(cls, data: Self):
-        if len(data.affected_services) != len(set(data.affected_services)):
+    def affected_services_no_duplicates(self) -> Self:
+        if len(self.affected_services) != len(set(self.affected_services)):
             raise ValueError("affected_services must be unique")
-        return data
+        return self
 
 
 class OutageItem(Base):
