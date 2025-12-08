@@ -3,7 +3,7 @@ name = "nerc_rates"
 authors = [
   {name="MOC Alliance"},
 ]
-version = "0.1"
+dynamic = ["version"]
 readme = "README.md"
 classifiers = [
   "Programming Language :: Python :: 3"
@@ -21,10 +21,15 @@ validate-rates-file = "nerc_rates.cmd.validate_rates_file:main"
 
 [build-system]
 requires = [
-  "setuptools>=42",
-  "wheel"
+  "setuptools>=80",
+  "wheel",
+  "setuptools-scm>=8"
 ]
 build-backend = "setuptools.build_meta"
+
+[tool.setuptools_scm]
+version_scheme = "no-guess-dev"
+local_scheme = "no-local-version"
 
 [tool.setuptools.package-dir]
 "" = "src"
