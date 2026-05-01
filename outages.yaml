@@ -61,7 +61,7 @@
       affected_services:
         - ocp-prod
 
-- url: https://nerc.instatus.com/cmo6hi4t70ezceipl6b1hmtmp
+- url: https://nerc.instatus.com/cmo6hi4t70ezceipl6b1hmtmp/
   timeframes:
     - from: "2026-04-19T14:00:00Z"
       until: "2026-04-20T17:00:00Z"
