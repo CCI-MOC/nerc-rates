@@ -3,7 +3,8 @@
 ## Maintenance includes nerc.mghpcc.org/event link
 ## Outage includes nerc.instatus.com link
 
-# The outages data below is an example only. They are not real outages.
+# The commented-out block below is an example format only.
+# Uncommented entries in this file are real scheduled maintenance/outage data.
 
 # All outage timeframes are in UTC.
 
