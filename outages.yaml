@@ -1,4 +1,10 @@
-# The outages data below is an example only. They are not real outages.
+# Please add all Maintenance and Outages below
+
+## Maintenance includes nerc.mghpcc.org/event link
+## Outage includes nerc.instatus.com link
+
+# The commented-out block below is an example format only.
+# Uncommented entries in this file are real scheduled maintenance/outage data.
 
 # All outage timeframes are in UTC.
 
@@ -7,12 +13,68 @@
 #     - from: "2024-05-22T12:00:00Z"
 #       until: "2024-05-29T03:00:00Z"
 #       affected_services:
-#         - NERC OpenStack
-#         - NERC OpenShift
+#         - ocp-prod
+#         - stack
+#         - ocp-test
+#         - academic
+#         - barcelona
 
 - url: https://nerc.mghpcc.org/event/nerc-system-maintenance-20251014/
   timeframes:
     - from: "2025-10-14T12:00:00Z"
       until: "2025-10-14T21:00:00Z"
+      affected_services:
+        - ocp-prod
+
+- url: https://nerc.mghpcc.org/event/nerc-system-maintenance-20251209/
+  timeframes:
+    - from: "2025-12-09T12:00:00Z"
+      until: "2025-12-09T21:00:00Z"
+      affected_services:
+        - ocp-prod
+
+- url: https://nerc.mghpcc.org/event/nerc-system-maintenance-20260113/
+  timeframes:
+    - from: "2026-01-13T12:00:00Z"
+      until: "2026-01-13T21:00:00Z"
+      affected_services:
+        - ocp-prod
+
+- url: https://nerc.mghpcc.org/event/nerc-system-maintenance-20260210/
+  timeframes:
+    - from: "2026-02-10T12:00:00Z"
+      until: "2026-02-10T21:00:00Z"
+      affected_services:
+        - ocp-prod
+
+- url: https://nerc.mghpcc.org/event/nerc-system-maintenance-20260310/
+  timeframes:
+    - from: "2026-03-10T12:00:00Z"
+      until: "2026-03-10T21:00:00Z"
+      affected_services:
+        - ocp-prod
+
+- url: https://nerc.mghpcc.org/event/nerc-system-maintenance-20260414/
+  timeframes:
+    - from: "2026-04-14T12:00:00Z"
+      until: "2026-04-14T21:00:00Z"
+      affected_services:
+        - ocp-prod
+
+- url: https://nerc.instatus.com/cmo6hi4t70ezceipl6b1hmtmp/
+  timeframes:
+    - from: "2026-04-19T14:00:00Z"
+      until: "2026-04-20T17:00:00Z"
+      affected_services:
+        - ocp-prod
+        - stack
+        - ocp-test
+        - academic
+        - barcelona
+
+- url: https://nerc.mghpcc.org/event/nerc-system-maintenance-20260512/
+  timeframes:
+    - from: "2026-05-12T12:00:00Z"
+      until: "2026-05-12T21:00:00Z"
       affected_services:
         - ocp-prod
