@@ -78,3 +78,14 @@
       until: "2026-05-12T21:00:00Z"
       affected_services:
         - ocp-prod
+
+- url: https://nerc.mghpcc.org/event/mghpcc-annual-power-shutdown-2026/
+  timeframes:
+    - from: "2026-06-15T13:00:00Z"
+      until: "2026-06-22T21:00:00Z"
+      affected_services:
+        - ocp-prod
+        - stack
+        - ocp-test
+        - academic
+        - barcelona
